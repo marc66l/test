@@ -9,78 +9,31 @@
 <style>
 /* FIX HÁTTÉR RÉTEG */
 .background-layer {
-position: fixed;
-top: 0;
-left: 0;
-width: 100%;
-height: 100%;
-z-index: -1;
-background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
-url('hatter.png');
-background-size: cover;
-background-position: center center;
-background-repeat: no-repeat;
+position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
+background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('hatter.png');
+background-size: cover; background-position: center center; background-repeat: no-repeat;
 }
 
 body, html {
-margin: 0;
-padding: 0;
-width: 100%;
-height: 100%;
-overflow: hidden;
-font-family: 'Roboto', sans-serif;
-display: flex;
-justify-content: center;
-align-items: center;
+margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden;
+font-family: 'Roboto', sans-serif; display: flex; justify-content: center; align-items: center;
 }
 
-/* Easter Egg üzenet stílusa */
+/* Easter Egg üzenet */
 #tap-message {
-position: fixed;
-top: 20%;
-background: rgba(255, 0, 0, 0.9);
-color: white;
-padding: 12px 25px;
-border-radius: 50px;
-display: none;
-z-index: 2000;
-font-weight: bold;
-pointer-events: none;
-box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-border: 2px solid white;
+position: fixed; top: 20%; background: rgba(255, 0, 0, 0.9); color: white; padding: 12px 25px;
+border-radius: 50px; display: none; z-index: 2000; font-weight: bold; pointer-events: none;
+box-shadow: 0 5px 15px rgba(0,0,0,0.3); border: 2px solid white;
 }
 
 .container {
-width: 85%;
-max-width: 400px;
-text-align: center;
-background: rgba(0, 0, 0, 0.8);
-padding: 30px 20px;
-border-radius: 30px;
-border: 2px solid #ffd700;
-box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-max-height: 90vh;
-overflow-y: auto;
-position: relative;
-z-index: 1;
+width: 85%; max-width: 400px; text-align: center; background: rgba(0, 0, 0, 0.8);
+padding: 30px 20px; border-radius: 30px; border: 2px solid #ffd700;
+box-shadow: 0 10px 30px rgba(0,0,0,0.5); max-height: 90vh; overflow-y: auto; position: relative; z-index: 1;
 }
 
-h1 {
-font-family: 'Montserrat', sans-serif;
-font-size: 32px;
-margin-bottom: 5px;
-color: #ffd700;
-text-transform: uppercase;
-}
-
-.motto {
-font-style: italic;
-margin-bottom: 30px;
-display: block;
-font-size: 14px;
-opacity: 0.9;
-color: white;
-}
+h1 { font-family: 'Montserrat', sans-serif; font-size: 32px; margin-bottom: 5px; color: #ffd700; text-transform: uppercase; }
+.motto { font-style: italic; margin-bottom: 30px; display: block; font-size: 14px; opacity: 0.9; color: white; }
 
 @keyframes pulse {
 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.4); }
@@ -89,92 +42,46 @@ color: white;
 }
 
 .btn {
-display: flex;
-align-items: center;
-justify-content: center;
-text-decoration: none;
-color: white;
-font-weight: bold;
-padding: 16px;
-margin-bottom: 15px;
-border-radius: 15px;
-font-size: 18px;
-transition: all 0.3s ease;
-box-sizing: border-box;
-cursor: pointer;
-border: none;
-width: 100%;
-animation: pulse 2s infinite;
+display: flex; align-items: center; justify-content: center; text-decoration: none; color: white;
+font-weight: bold; padding: 16px; margin-bottom: 15px; border-radius: 15px; font-size: 18px;
+transition: all 0.3s ease; box-sizing: border-box; cursor: pointer; border: none; width: 100%; animation: pulse 2s infinite;
 }
 
 .btn-insta { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
 .btn-wish { background-color: #27ae60; animation-delay: 0.5s; }
 .btn-video-menu { background-color: #f39c12; animation-delay: 0.3s; }
 
-#wish-form-container {
-display: none;
-margin-top: 20px;
-background: white;
-padding: 20px;
-border-radius: 15px;
-color: #333;
-animation: slideIn 0.4s ease-out;
+#wish-form-container { display: none; margin-top: 20px; background: white; padding: 20px; border-radius: 15px; color: #333; animation: slideIn 0.4s ease-out; }
+@keyframes slideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+textarea { width: 100%; border: 1px solid #ddd; border-radius: 10px; padding: 12px; box-sizing: border-box; font-family: inherit; margin-bottom: 12px; resize: none; font-size: 15px; }
+.submit-btn { background-color: #2980b9; color: white; border: none; padding: 12px; border-radius: 10px; width: 100%; font-weight: bold; cursor: pointer; }
+
+/* OVERLAY STÍLUSOK (VIDEÓ, MENÜ, ÜZENETEK) */
+#video-overlay, #video-menu-overlay, #success-overlay, #info-overlay {
+display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+background: rgba(0,0,0,0.95); z-index: 1000; justify-content: center; align-items: center; flex-direction: column; text-align: center;
 }
 
-@keyframes slideIn {
-from { opacity: 0; transform: translateY(20px); }
-to { opacity: 1; transform: translateY(0); }
+.menu-card, .info-card, .success-card {
+background: white; padding: 25px; border-radius: 25px; width: 85%; max-width: 350px;
+box-shadow: 0 20px 40px rgba(0,0,0,0.5); animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-textarea {
-width: 100%; border: 1px solid #ddd; border-radius: 10px; padding: 12px;
-box-sizing: border-box; font-family: inherit; margin-bottom: 12px;
-resize: none; font-size: 15px;
-}
+/* Videó iframe konténer */
+#video-container { width: 95%; max-width: 800px; height: 60vh; display: flex; justify-content: center; }
+iframe { width: 100%; height: 100%; border: 3px solid #ffd700; border-radius: 15px; background: black; }
 
-.submit-btn {
-background-color: #2980b9; color: white; border: none; padding: 12px;
-border-radius: 10px; width: 100%; font-weight: bold; cursor: pointer;
-}
-
-/* VIDEÓ ÉS MENÜ OVERLAY */
-#video-overlay, #video-menu-overlay, #success-overlay {
-display: none;
-position: fixed;
-top: 0; left: 0; width: 100%; height: 100%;
-background: rgba(0,0,0,0.95);
-z-index: 1000;
-justify-content: center;
-align-items: center;
-flex-direction: column;
-text-align: center;
-}
-
-.menu-card {
-background: white;
-padding: 25px;
-border-radius: 25px;
-width: 85%;
-max-width: 350px;
-box-shadow: 0 15px 35px rgba(0,0,0,0.5);
-}
-
-video { width: 100%; max-height: 80vh; border-radius: 10px; }
-
-.success-card {
-background: white;
-padding: 30px;
-border-radius: 20px;
-color: #333;
-width: 80%;
-max-width: 300px;
-border-top: 8px solid #27ae60;
-box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
+/* Sikeres üzenet specifikus */
+.success-card { border-top: 8px solid #27ae60; }
 .success-card h2 { color: #27ae60; margin-top: 0; }
-.success-card p { font-weight: bold; line-height: 1.5; }
+
+/* Infó üzenet specifikus (Hoppá) */
+.info-card { border-top: 8px solid #f39c12; }
+.info-card h2 { color: #f39c12; margin-top: 0; }
+.info-card p { font-weight: bold; line-height: 1.5; color: #333; }
+
+@keyframes popIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
 </style>
 </head>
 <body>
@@ -201,8 +108,7 @@ animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 <div id="wish-form-container">
 <form id="my-form">
 <p style="margin: 0 0 10px 0; font-weight: bold; font-size: 18px;">Mit intézzünk el?</p>
-<textarea name="message" id="message-text" rows="4"
-placeholder="Osztály, tantárgy, tanár neve, hányadik óra stb..." required></textarea>
+<textarea name="message" id="message-text" rows="4" placeholder="Osztály, tantárgy, tanár neve, hányadik óra stb..." required></textarea>
 <button type="submit" id="submit-button" class="submit-btn">Intézd el!</button>
 </form>
 </div>
@@ -211,19 +117,29 @@ placeholder="Osztály, tantárgy, tanár neve, hányadik óra stb..." required><
 <div id="video-menu-overlay">
     <div class="menu-card">
         <h2 style="margin-top:0; color:#333;">Válassz videót!</h2>
-        <button class="submit-btn" style="margin-bottom:10px; background:#e67e22;" onclick="play4K('1Wwo85FWTN5yEhYxTlJteokDdqsqMzTZS')">1. Ötlet születése</button>
-        <button class="submit-btn" style="margin-bottom:10px; background:#95a5a6;" onclick="alert('Látom már kíváncsi vagy 😉')">2. Videó</button>
-        <button class="submit-btn" style="margin-bottom:10px; background:#95a5a6;" onclick="alert('Látom már kíváncsi vagy 😉')">3. Videó</button>
-        <button class="submit-btn" style="margin-bottom:10px; background:#95a5a6;" onclick="alert('Látom már kíváncsi vagy 😉')">4. Videó</button>
-        <button class="submit-btn" style="margin-bottom:10px; background:#95a5a6;" onclick="alert('Látom már kíváncsi vagy 😉')">5. Videó</button>
-        <button class="submit-btn" style="margin-bottom:10px; background:#95a5a6;" onclick="alert('Látom már kíváncsi vagy 😉')">6. Videó</button>
-        <button class="submit-btn" style="margin-bottom:10px; background:#34495e; cursor:default;">7. Hamarosan...</button>
+        <button class="submit-btn" style="margin-bottom:10px; background:#e67e22;" onclick="playDriveVideo('1Wwo85FWTN5yEhYxTlJteokDdqsqMzTZS')">1. Ötlet születése</button>
+        
+        <button class="submit-btn" style="margin-bottom:10px; background:#95a5a6;" onclick="showInfo()">2. Kampány indul</button>
+        <button class="submit-btn" style="margin-bottom:10px; background:#95a5a6;" onclick="showInfo()">3. Videó</button>
+        <button class="submit-btn" style="margin-bottom:10px; background:#95a5a6;" onclick="showInfo()">4. Videó</button>
+        <button class="submit-btn" style="margin-bottom:10px; background:#95a5a6;" onclick="showInfo()">5. Videó</button>
+        <button class="submit-btn" style="margin-bottom:10px; background:#95a5a6;" onclick="showInfo()">6. Videó</button>
+        <button class="submit-btn" style="margin-bottom:10px; background:#34495e;" onclick="showInfo()">7. Hamarosan...</button>
+        
         <button onclick="document.getElementById('video-menu-overlay').style.display='none'" class="submit-btn" style="background:#7f8c8d; margin-top:10px;">Bezárás</button>
     </div>
 </div>
 
+<div id="info-overlay">
+    <div class="info-card">
+        <h2>😉 HOPPÁ!</h2>
+        <p>Látom már kíváncsi vagy...<br>Hamarosan érkezik!</p>
+        <button onclick="document.getElementById('info-overlay').style.display='none'" class="submit-btn" style="background:#f39c12; margin-top:10px;">Rendben</button>
+    </div>
+</div>
+
 <div id="video-overlay">
-    <video id="player" controls></video>
+    <div id="video-container"></div>
     <button onclick="closeVideo()" class="submit-btn" style="width:200px; background:#ffd700; color:black; margin-top:20px;">VISSZA</button>
 </div>
 
@@ -238,19 +154,25 @@ placeholder="Osztály, tantárgy, tanár neve, hányadik óra stb..." required><
 <script>
 const scriptURL = 'https://script.google.com/macros/s/AKfycbzk5LEtFjBApTaQlK66QJlNPIk69Og36snw9B6iSekoKF0VNinIe0Yi2-cZLyH7lG3Ikw/exec';
 
-// 4K LEJÁTSZÓ FUNKCIÓ
-function play4K(id) {
-    const video = document.getElementById('player');
+// VIDEÓ KEZELÉS (IFRAME MEGOLDÁS)
+function playDriveVideo(id) {
     const overlay = document.getElementById('video-overlay');
-    video.src = `https://drive.google.com/uc?export=download&id=${id}`;
+    const container = document.getElementById('video-container');
+    // Iframe beillesztése preview módban - ez kezeli a nagy fájlokat is
+    container.innerHTML = `<iframe src="https://drive.google.com/file/d/${id}/preview" allow="autoplay; fullscreen" allowfullscreen></iframe>`;
     overlay.style.display = 'flex';
-    video.play();
 }
 
 function closeVideo() {
-    const video = document.getElementById('player');
-    video.pause();
-    document.getElementById('video-overlay').style.display = 'none';
+    const overlay = document.getElementById('video-overlay');
+    const container = document.getElementById('video-container');
+    container.innerHTML = ''; // Törli az iframe-et (megállítja a videót)
+    overlay.style.display = 'none';
+}
+
+// ÚJ INFO ABLAK KEZELÉSE
+function showInfo() {
+    document.getElementById('info-overlay').style.display = 'flex';
 }
 
 let bgClicks = 0;
@@ -289,18 +211,9 @@ var btn = document.getElementById("submit-button");
 btn.disabled = true;
 btn.innerText = "Küldés...";
 
-fetch(scriptURL, {
-method: 'POST',
-mode: 'no-cors',
-body: new FormData(form)
-})
+fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: new FormData(form) })
 .then(() => {
-confetti({
-particleCount: 150,
-spread: 70,
-origin: { y: 0.6 },
-colors: ['#ffd700', '#ffffff', '#27ae60']
-});
+confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#ffd700', '#ffffff', '#27ae60'] });
 document.getElementById("success-overlay").style.display = "flex";
 form.reset();
 toggleForm();
