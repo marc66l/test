@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
-        /* --- EREDETI STÍLUSOK (VÁLTOZATLAN) --- */
+        /* --- EREDETI STÍLUSOK --- */
         .background-layer {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
             background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('hatter.png');
@@ -48,8 +48,6 @@
 
         .btn-insta { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
         .btn-wish { background-color: #27ae60; animation-delay: 0.5s; }
-        
-        /* ÚJ: Videó gomb stílusa (illeszkedik a többihez) */
         .btn-video-menu { background-color: #f39c12; animation-delay: 0.3s; }
 
         #wish-form-container { display: none; margin-top: 20px; background: white; padding: 20px; border-radius: 15px; color: #333; animation: slideIn 0.4s ease-out; }
@@ -58,30 +56,33 @@
         textarea { width: 100%; border: 1px solid #ddd; border-radius: 10px; padding: 12px; box-sizing: border-box; font-family: inherit; margin-bottom: 12px; resize: none; font-size: 15px; }
         .submit-btn { background-color: #2980b9; color: white; border: none; padding: 12px; border-radius: 10px; width: 100%; font-weight: bold; cursor: pointer; }
 
-        /* --- ÚJ POPUP ABLAKOK STÍLUSA (hogy ne csússzon szét az alap) --- */
+        /* --- MÓDOSÍTOTT OVERLAY STÍLUS (BLUR + ÁTLÁTSZÓSÁG) --- */
         #success-overlay, #video-menu-overlay, #info-overlay, #video-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95); z-index: 3000; /* Magasabb z-index */
+            
+            /* Itt a változás: */
+            background: rgba(0, 0, 0, 0.6); /* Csak 60%-os sötétítés, hogy látszódjon a háttér */
+            backdrop-filter: blur(8px);      /* Homályosítás, hogy szép legyen */
+            -webkit-backdrop-filter: blur(8px); /* iPhone támogatás */
+            
+            z-index: 3000;
             justify-content: center; align-items: center; flex-direction: column; text-align: center;
         }
 
-        /* Közös kártya stílus (mint a success-card) */
         .popup-card {
             background: white; padding: 25px; border-radius: 20px; width: 85%; max-width: 320px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.5); animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         
-        /* Videó ablak stílus */
         #video-wrapper {
             width: 95%; height: 60vh; background: black; border: 2px solid #ffd700; border-radius: 10px; overflow: hidden;
         }
         iframe { width: 100%; height: 100%; border: none; }
 
-        /* Színes fejlécek */
         .success-card { border-top: 8px solid #27ae60; }
         .success-card h2 { color: #27ae60; margin-top: 0; }
         
-        .info-card { border-top: 8px solid #f39c12; } /* Narancs a Hoppá-nak */
+        .info-card { border-top: 8px solid #f39c12; }
         .info-card h2 { color: #f39c12; margin-top: 0; }
         .info-card p { color: #333; font-weight: bold; }
 
@@ -159,16 +160,14 @@
     <script>
         const scriptURL = 'https://script.google.com/macros/s/AKfycbzk5LEtFjBApTaQlK66QJlNPIk69Og36snw9B6iSekoKF0VNinIe0Yi2-cZLyH7lG3Ikw/exec';
 
-        // --- ÚJ JS FUNKCIÓK A VIDEÓHOZ ---
         function playVideo(id) {
             const wrapper = document.getElementById('video-wrapper');
-            // Ez a preview linkes megoldás működött a 4K-hoz
             wrapper.innerHTML = `<iframe src="https://drive.google.com/file/d/${id}/preview" allow="autoplay; fullscreen" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe>`;
             document.getElementById('video-overlay').style.display = 'flex';
         }
 
         function closeVideo() {
-            document.getElementById('video-wrapper').innerHTML = ''; // Leállítja a videót
+            document.getElementById('video-wrapper').innerHTML = '';
             document.getElementById('video-overlay').style.display = 'none';
         }
 
@@ -176,7 +175,6 @@
             document.getElementById('info-overlay').style.display = 'flex';
         }
 
-        // --- EREDETI JS KÓD ---
         let bgClicks = 0;
         function handleBgClick() {
             bgClicks++;
@@ -213,29 +211,18 @@
             btn.disabled = true;
             btn.innerText = "Küldés...";
 
-            fetch(scriptURL, { 
-                method: 'POST', 
-                mode: 'no-cors', 
-                body: new FormData(form)
-            })
+            fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: new FormData(form) })
             .then(() => {
                 confetti({
-                    particleCount: 150,
-                    spread: 70,
-                    origin: { y: 0.6 },
+                    particleCount: 150, spread: 70, origin: { y: 0.6 },
                     colors: ['#ffd700', '#ffffff', '#27ae60']
                 });
                 document.getElementById("success-overlay").style.display = "flex";
-                form.reset();
-                toggleForm();
-                btn.disabled = false;
-                btn.innerText = "Intézd el!";
+                form.reset(); toggleForm(); btn.disabled = false; btn.innerText = "Intézd el!";
             })
             .catch(error => {
-                console.error('Hiba!', error);
-                alert("Hiba történt a küldés során!");
-                btn.disabled = false;
-                btn.innerText = "Intézd el!";
+                console.error('Hiba!', error); alert("Hiba történt!");
+                btn.disabled = false; btn.innerText = "Intézd el!";
             });
         });
     </script>
