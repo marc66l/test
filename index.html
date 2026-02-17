@@ -68,8 +68,9 @@ background: white; padding: 25px; border-radius: 25px; width: 85%; max-width: 35
 box-shadow: 0 20px 40px rgba(0,0,0,0.5); animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-/* Videó lejátszó stílus */
-video { width: 100%; max-height: 80vh; border: 2px solid #ffd700; border-radius: 10px; background: black; }
+/* Videó konténer (Iframe alapú a 4K-hoz) */
+#video-wrapper { width: 90%; height: 70vh; max-width: 800px; border: 2px solid #ffd700; border-radius: 15px; overflow: hidden; background: black; }
+iframe { width: 100%; height: 100%; border: none; }
 
 /* Sikeres üzenet */
 .success-card { border-top: 8px solid #27ae60; }
@@ -117,7 +118,7 @@ video { width: 100%; max-height: 80vh; border: 2px solid #ffd700; border-radius:
     <div class="menu-card">
         <h2 style="margin-top:0; color:#333;">Válassz videót!</h2>
         
-        <button class="submit-btn" style="margin-bottom:10px; background:#e67e22;" onclick="playDirectVideo('1fmZ5r4I2-gckufjDp0c4A2EsN93luT4N')">A kezdet</button>
+        <button class="submit-btn" style="margin-bottom:10px; background:#e67e22;" onclick="playVideo('1fmZ5r4I2-gckufjDp0c4A2EsN93luT4N')">A kezdet</button>
         
         <button class="submit-btn" style="margin-bottom:10px; background:#95a5a6;" onclick="showInfo()">Hamarosan...</button>
         <button class="submit-btn" style="margin-bottom:10px; background:#95a5a6;" onclick="showInfo()">Hamarosan...</button>
@@ -139,7 +140,8 @@ video { width: 100%; max-height: 80vh; border: 2px solid #ffd700; border-radius:
 </div>
 
 <div id="video-overlay">
-    <video id="player" controls playsinline></video>
+    <div id="video-wrapper">
+        </div>
     <button onclick="closeVideo()" class="submit-btn" style="width:200px; background:#ffd700; color:black; margin-top:20px;">VISSZA</button>
 </div>
 
@@ -154,20 +156,16 @@ video { width: 100%; max-height: 80vh; border: 2px solid #ffd700; border-radius:
 <script>
 const scriptURL = 'https://script.google.com/macros/s/AKfycbzk5LEtFjBApTaQlK66QJlNPIk69Og36snw9B6iSekoKF0VNinIe0Yi2-cZLyH7lG3Ikw/exec';
 
-// 4K LEJÁTSZÓ (Közvetlen link generálás)
-function playDirectVideo(id) {
-    const video = document.getElementById('player');
+function playVideo(id) {
+    const wrapper = document.getElementById('video-wrapper');
     const overlay = document.getElementById('video-overlay');
-    // Ez a formátum kényszeríti a letöltést/streamet a Drive lejátszó kerete nélkül
-    video.src = `https://drive.google.com/uc?export=download&id=${id}`;
+    // A /preview link kikerüli a vírusellenőrzési blokkot és streameli a nagy fájlt is
+    wrapper.innerHTML = `<iframe src="https://drive.google.com/file/d/${id}/preview" allow="autoplay"></iframe>`;
     overlay.style.display = 'flex';
-    video.play().catch(e => console.log("Autoplay tiltva, kattintásra indul"));
 }
 
 function closeVideo() {
-    const video = document.getElementById('player');
-    video.pause();
-    video.src = ""; // Kiürítjük a forrást, hogy ne fogyassza a netet a háttérben
+    document.getElementById('video-wrapper').innerHTML = '';
     document.getElementById('video-overlay').style.display = 'none';
 }
 
@@ -188,11 +186,7 @@ setTimeout(() => { msg.style.display = 'none'; }, 2000);
 
 document.getElementById('insta-link').onclick = function(e) {
 var start = Date.now();
-setTimeout(function() {
-if (Date.now() - start < 1500) {
-window.location.href = "https://www.instagram.com/david_a_showman/";
-}
-}, 500);
+setTimeout(function() { if (Date.now() - start < 1500) { window.location.href = "https://www.instagram.com/david_a_showman/"; } }, 500);
 };
 
 function toggleForm() {
@@ -200,9 +194,7 @@ var formDiv = document.getElementById("wish-form-container");
 formDiv.style.display = (formDiv.style.display === "block") ? "none" : "block";
 }
 
-function closeModal() {
-document.getElementById("success-overlay").style.display = "none";
-}
+function closeModal() { document.getElementById("success-overlay").style.display = "none"; }
 
 const form = document.getElementById("my-form");
 form.addEventListener("submit", e => {
@@ -210,22 +202,13 @@ e.preventDefault();
 var btn = document.getElementById("submit-button");
 btn.disabled = true;
 btn.innerText = "Küldés...";
-
 fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: new FormData(form) })
 .then(() => {
 confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#ffd700', '#ffffff', '#27ae60'] });
 document.getElementById("success-overlay").style.display = "flex";
-form.reset();
-toggleForm();
-btn.disabled = false;
-btn.innerText = "Intézd el!";
+form.reset(); toggleForm(); btn.disabled = false; btn.innerText = "Intézd el!";
 })
-.catch(error => {
-console.error('Hiba!', error);
-alert("Hiba történt a küldés során!");
-btn.disabled = false;
-btn.innerText = "Intézd el!";
-});
+.catch(error => { console.error('Hiba!', error); alert("Hiba történt!"); btn.disabled = false; btn.innerText = "Intézd el!"; });
 });
 </script>
 </body>
