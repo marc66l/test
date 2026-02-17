@@ -57,7 +57,7 @@ transition: all 0.3s ease; box-sizing: border-box; cursor: pointer; border: none
 textarea { width: 100%; border: 1px solid #ddd; border-radius: 10px; padding: 12px; box-sizing: border-box; font-family: inherit; margin-bottom: 12px; resize: none; font-size: 15px; }
 .submit-btn { background-color: #2980b9; color: white; border: none; padding: 12px; border-radius: 10px; width: 100%; font-weight: bold; cursor: pointer; }
 
-/* OVERLAY STÍLUSOK (VIDEÓ, MENÜ, ÜZENETEK) */
+/* OVERLAY STÍLUSOK */
 #video-overlay, #video-menu-overlay, #success-overlay, #info-overlay {
 display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
 background: rgba(0,0,0,0.95); z-index: 1000; justify-content: center; align-items: center; flex-direction: column; text-align: center;
@@ -68,15 +68,14 @@ background: white; padding: 25px; border-radius: 25px; width: 85%; max-width: 35
 box-shadow: 0 20px 40px rgba(0,0,0,0.5); animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-/* Videó iframe konténer */
-#video-container { width: 95%; max-width: 800px; height: 60vh; display: flex; justify-content: center; }
-iframe { width: 100%; height: 100%; border: 3px solid #ffd700; border-radius: 15px; background: black; }
+/* Videó lejátszó stílus */
+video { width: 100%; max-height: 80vh; border: 2px solid #ffd700; border-radius: 10px; background: black; }
 
-/* Sikeres üzenet specifikus */
+/* Sikeres üzenet */
 .success-card { border-top: 8px solid #27ae60; }
 .success-card h2 { color: #27ae60; margin-top: 0; }
 
-/* Infó üzenet specifikus (Hoppá) */
+/* Infó üzenet (Hoppá) */
 .info-card { border-top: 8px solid #f39c12; }
 .info-card h2 { color: #f39c12; margin-top: 0; }
 .info-card p { font-weight: bold; line-height: 1.5; color: #333; }
@@ -117,14 +116,15 @@ iframe { width: 100%; height: 100%; border: 3px solid #ffd700; border-radius: 15
 <div id="video-menu-overlay">
     <div class="menu-card">
         <h2 style="margin-top:0; color:#333;">Válassz videót!</h2>
-        <button class="submit-btn" style="margin-bottom:10px; background:#e67e22;" onclick="playDriveVideo('1Wwo85FWTN5yEhYxTlJteokDdqsqMzTZS')">1. Ötlet születése</button>
         
-        <button class="submit-btn" style="margin-bottom:10px; background:#95a5a6;" onclick="showInfo()">2. Kampány indul</button>
-        <button class="submit-btn" style="margin-bottom:10px; background:#95a5a6;" onclick="showInfo()">3. Videó</button>
-        <button class="submit-btn" style="margin-bottom:10px; background:#95a5a6;" onclick="showInfo()">4. Videó</button>
-        <button class="submit-btn" style="margin-bottom:10px; background:#95a5a6;" onclick="showInfo()">5. Videó</button>
-        <button class="submit-btn" style="margin-bottom:10px; background:#95a5a6;" onclick="showInfo()">6. Videó</button>
-        <button class="submit-btn" style="margin-bottom:10px; background:#34495e;" onclick="showInfo()">7. Hamarosan...</button>
+        <button class="submit-btn" style="margin-bottom:10px; background:#e67e22;" onclick="playDirectVideo('1fmZ5r4I2-gckufjDp0c4A2EsN93luT4N')">A kezdet</button>
+        
+        <button class="submit-btn" style="margin-bottom:10px; background:#95a5a6;" onclick="showInfo()">Hamarosan...</button>
+        <button class="submit-btn" style="margin-bottom:10px; background:#95a5a6;" onclick="showInfo()">Hamarosan...</button>
+        <button class="submit-btn" style="margin-bottom:10px; background:#95a5a6;" onclick="showInfo()">Hamarosan...</button>
+        <button class="submit-btn" style="margin-bottom:10px; background:#95a5a6;" onclick="showInfo()">Hamarosan...</button>
+        <button class="submit-btn" style="margin-bottom:10px; background:#95a5a6;" onclick="showInfo()">Hamarosan...</button>
+        <button class="submit-btn" style="margin-bottom:10px; background:#34495e;" onclick="showInfo()">Hamarosan...</button>
         
         <button onclick="document.getElementById('video-menu-overlay').style.display='none'" class="submit-btn" style="background:#7f8c8d; margin-top:10px;">Bezárás</button>
     </div>
@@ -139,7 +139,7 @@ iframe { width: 100%; height: 100%; border: 3px solid #ffd700; border-radius: 15
 </div>
 
 <div id="video-overlay">
-    <div id="video-container"></div>
+    <video id="player" controls playsinline></video>
     <button onclick="closeVideo()" class="submit-btn" style="width:200px; background:#ffd700; color:black; margin-top:20px;">VISSZA</button>
 </div>
 
@@ -154,23 +154,23 @@ iframe { width: 100%; height: 100%; border: 3px solid #ffd700; border-radius: 15
 <script>
 const scriptURL = 'https://script.google.com/macros/s/AKfycbzk5LEtFjBApTaQlK66QJlNPIk69Og36snw9B6iSekoKF0VNinIe0Yi2-cZLyH7lG3Ikw/exec';
 
-// VIDEÓ KEZELÉS (IFRAME MEGOLDÁS)
-function playDriveVideo(id) {
+// 4K LEJÁTSZÓ (Közvetlen link generálás)
+function playDirectVideo(id) {
+    const video = document.getElementById('player');
     const overlay = document.getElementById('video-overlay');
-    const container = document.getElementById('video-container');
-    // Iframe beillesztése preview módban - ez kezeli a nagy fájlokat is
-    container.innerHTML = `<iframe src="https://drive.google.com/file/d/${id}/preview" allow="autoplay; fullscreen" allowfullscreen></iframe>`;
+    // Ez a formátum kényszeríti a letöltést/streamet a Drive lejátszó kerete nélkül
+    video.src = `https://drive.google.com/uc?export=download&id=${id}`;
     overlay.style.display = 'flex';
+    video.play().catch(e => console.log("Autoplay tiltva, kattintásra indul"));
 }
 
 function closeVideo() {
-    const overlay = document.getElementById('video-overlay');
-    const container = document.getElementById('video-container');
-    container.innerHTML = ''; // Törli az iframe-et (megállítja a videót)
-    overlay.style.display = 'none';
+    const video = document.getElementById('player');
+    video.pause();
+    video.src = ""; // Kiürítjük a forrást, hogy ne fogyassza a netet a háttérben
+    document.getElementById('video-overlay').style.display = 'none';
 }
 
-// ÚJ INFO ABLAK KEZELÉSE
 function showInfo() {
     document.getElementById('info-overlay').style.display = 'flex';
 }
