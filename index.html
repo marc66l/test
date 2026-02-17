@@ -1,190 +1,243 @@
 <!DOCTYPE html>
 <html lang="hu">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Szavazz a 12.B-re!</title>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-<style>
-/* ALAP BEÁLLÍTÁSOK */
-body, html {
-    margin: 0; padding: 0; width: 100%; height: 100%; 
-    overflow: hidden; font-family: 'Roboto', sans-serif;
-    display: flex; justify-content: center; align-items: center;
-    background-color: #000;
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Szavazz a 12.B-re!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        /* --- EREDETI STÍLUSOK (VÁLTOZATLAN) --- */
+        .background-layer {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('hatter.png');
+            background-size: cover; background-position: center center; background-repeat: no-repeat;
+        }
 
-.background-layer {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
-    background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('hatter.png');
-    background-size: cover; background-position: center center;
-}
+        body, html {
+            margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden;
+            font-family: 'Roboto', sans-serif; display: flex; justify-content: center; align-items: center;
+        }
 
-/* KONTÉNER ÉS GOMBOK */
-.container {
-    width: 88%; max-width: 400px; text-align: center; 
-    background: rgba(0, 0, 0, 0.85); padding: 25px 15px;
-    border-radius: 25px; border: 2px solid #ffd700;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    max-height: 90vh; overflow-y: auto; z-index: 1;
-}
+        #tap-message {
+            position: fixed; top: 20%; background: rgba(255, 0, 0, 0.9); color: white; padding: 12px 25px;
+            border-radius: 50px; display: none; z-index: 2000; font-weight: bold; pointer-events: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3); border: 2px solid white;
+        }
 
-h1 { font-family: 'Montserrat', sans-serif; font-size: 28px; color: #ffd700; margin-bottom: 5px; }
-.motto { font-style: italic; margin-bottom: 25px; display: block; font-size: 13px; color: #fff; opacity: 0.8; }
+        .container {
+            width: 85%; max-width: 400px; text-align: center; background: rgba(0, 0, 0, 0.8);
+            padding: 30px 20px; border-radius: 30px; border: 2px solid #ffd700;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); max-height: 90vh; overflow-y: auto; position: relative; z-index: 1;
+        }
 
-.btn {
-    display: flex; align-items: center; justify-content: center;
-    color: white; font-weight: bold; padding: 18px; margin-bottom: 12px;
-    border-radius: 15px; font-size: 17px; cursor: pointer; border: none; width: 100%;
-    transition: transform 0.2s;
-}
+        h1 { font-family: 'Montserrat', sans-serif; font-size: 32px; margin-bottom: 5px; color: #ffd700; text-transform: uppercase; }
+        .motto { font-style: italic; margin-bottom: 30px; display: block; font-size: 14px; opacity: 0.9; color: white; }
 
-.btn-video-menu { background-color: #f39c12; }
-.btn-insta { background: linear-gradient(45deg, #f09433 0%, #dc2743 50%, #bc1888 100%); }
-.btn-wish { background-color: #27ae60; }
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.4); }
+            70% { transform: scale(1.02); box-shadow: 0 0 0 15px rgba(255, 215, 0, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 215, 0, 0); }
+        }
 
-/* OVERLAY RENDSZER */
-.overlay {
-    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.95); z-index: 1000;
-    justify-content: center; align-items: center; flex-direction: column;
-}
+        .btn {
+            display: flex; align-items: center; justify-content: center; text-decoration: none; color: white;
+            font-weight: bold; padding: 16px; margin-bottom: 15px; border-radius: 15px; font-size: 18px;
+            transition: all 0.3s ease; box-sizing: border-box; cursor: pointer; border: none; width: 100%; animation: pulse 2s infinite;
+        }
 
-/* VIDEÓ LEJÁTSZÓ MOBILRA */
-#video-wrapper {
-    width: 95%; height: 60vh; /* Mobil kijelzőhöz igazítva */
-    background: #000; border-radius: 10px; border: 1px solid #ffd700;
-    overflow: hidden;
-}
-iframe { width: 100%; height: 100%; border: none; }
+        .btn-insta { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
+        .btn-wish { background-color: #27ae60; animation-delay: 0.5s; }
+        
+        /* ÚJ: Videó gomb stílusa (illeszkedik a többihez) */
+        .btn-video-menu { background-color: #f39c12; animation-delay: 0.3s; }
 
-/* KÁRTYÁK (MENÜ, INFO, SIKER) */
-.card {
-    background: white; padding: 25px; border-radius: 20px;
-    width: 85%; max-width: 320px; text-align: center;
-    box-shadow: 0 15px 30px rgba(0,0,0,0.5);
-}
-.card h2 { margin-top: 0; font-size: 22px; }
-.submit-btn { 
-    background-color: #2980b9; color: white; border: none; 
-    padding: 14px; border-radius: 10px; width: 100%; 
-    font-weight: bold; font-size: 16px; margin-top: 10px;
-}
+        #wish-form-container { display: none; margin-top: 20px; background: white; padding: 20px; border-radius: 15px; color: #333; animation: slideIn 0.4s ease-out; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-/* EASTER EGG */
-#tap-message {
-    position: fixed; top: 15%; background: #e74c3c; color: #fff;
-    padding: 10px 20px; border-radius: 50px; display: none; z-index: 2000;
-}
-</style>
+        textarea { width: 100%; border: 1px solid #ddd; border-radius: 10px; padding: 12px; box-sizing: border-box; font-family: inherit; margin-bottom: 12px; resize: none; font-size: 15px; }
+        .submit-btn { background-color: #2980b9; color: white; border: none; padding: 12px; border-radius: 10px; width: 100%; font-weight: bold; cursor: pointer; }
+
+        /* --- ÚJ POPUP ABLAKOK STÍLUSA (hogy ne csússzon szét az alap) --- */
+        #success-overlay, #video-menu-overlay, #info-overlay, #video-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95); z-index: 3000; /* Magasabb z-index */
+            justify-content: center; align-items: center; flex-direction: column; text-align: center;
+        }
+
+        /* Közös kártya stílus (mint a success-card) */
+        .popup-card {
+            background: white; padding: 25px; border-radius: 20px; width: 85%; max-width: 320px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5); animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        /* Videó ablak stílus */
+        #video-wrapper {
+            width: 95%; height: 60vh; background: black; border: 2px solid #ffd700; border-radius: 10px; overflow: hidden;
+        }
+        iframe { width: 100%; height: 100%; border: none; }
+
+        /* Színes fejlécek */
+        .success-card { border-top: 8px solid #27ae60; }
+        .success-card h2 { color: #27ae60; margin-top: 0; }
+        
+        .info-card { border-top: 8px solid #f39c12; } /* Narancs a Hoppá-nak */
+        .info-card h2 { color: #f39c12; margin-top: 0; }
+        .info-card p { color: #333; font-weight: bold; }
+
+        @keyframes popIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+    </style>
 </head>
 <body>
 
-<div class="background-layer" onclick="handleBgClick()"></div>
-<div id="tap-message">Ne böködj, fáj! 😠</div>
+    <div class="background-layer" onclick="handleBgClick()"></div>
+    <div id="tap-message">Ne böködj, fáj! 😠</div>
 
-<div class="container">
-    <h1>CSAK A 12.B!</h1>
-    <span class="motto">Válaszd a jövőt, válaszd a showmant!</span>
+    <div class="container">
+        <h1>CSAK A 12.B!</h1>
+        <span class="motto">Válaszd a jövőt, válaszd a showmant!</span>
 
-    <button class="btn btn-video-menu" onclick="openOverlay('video-menu-overlay')">🎬 Videók</button>
-    <a href="https://www.instagram.com/david_a_showman/" class="btn btn-insta">📸 Instagram</a>
-    <button class="btn btn-wish" onclick="toggleForm()">✉️ Kívánságműsor</button>
+        <button class="btn btn-video-menu" onclick="document.getElementById('video-menu-overlay').style.display='flex'">
+            🎬 Videók
+        </button>
 
-    <div id="wish-form-container" style="display:none; margin-top:15px; background:#fff; padding:15px; border-radius:15px;">
-        <form id="my-form">
-            <textarea name="message" rows="3" placeholder="Mit intézzünk el?" style="width:100%; border:1px solid #ccc; border-radius:10px; padding:10px; box-sizing:border-box;" required></textarea>
-            <button type="submit" id="submit-button" class="submit-btn">Intézd el!</button>
-        </form>
+        <a href="instagram://user?username=david_a_showman" id="insta-link" class="btn btn-insta">
+            📸 Ne maradj le semmiről!
+        </a>
+
+        <button class="btn btn-wish" onclick="toggleForm()">
+            ✉️ Küldj egy kívánságot!
+        </button>
+
+        <div id="wish-form-container">
+            <form id="my-form">
+                <p style="margin: 0 0 10px 0; font-weight: bold; font-size: 18px;">Mit intézzünk el?</p>
+                <textarea name="message" id="message-text" rows="4" 
+                placeholder="Osztály, tantárgy, tanár neve, hányadik óra stb..." required></textarea>
+                <button type="submit" id="submit-button" class="submit-btn">Intézd el!</button>
+            </form>
+        </div>
     </div>
-</div>
 
-<div id="video-menu-overlay" class="overlay">
-    <div class="card">
-        <h2 style="color:#333;">Válassz videót!</h2>
-        <button class="submit-btn" style="background:#e67e22;" onclick="playVideo('1fmZ5r4I2-gckufjDp0c4A2EsN93luT4N')">A kezdet</button>
-        <button class="submit-btn" style="background:#95a5a6;" onclick="showInfo()">Hamarosan...</button>
-        <button class="submit-btn" style="background:#95a5a6;" onclick="showInfo()">Hamarosan...</button>
-        <button class="submit-btn" style="background:#34495e;" onclick="closeOverlay('video-menu-overlay')">Vissza</button>
+    <div id="video-menu-overlay">
+        <div class="popup-card">
+            <h2 style="margin-top:0; color:#333;">Válassz videót!</h2>
+            <button class="submit-btn" style="margin-bottom:10px; background:#e67e22;" onclick="playVideo('1fmZ5r4I2-gckufjDp0c4A2EsN93luT4N')">A kezdet</button>
+            
+            <button class="submit-btn" style="margin-bottom:10px; background:#95a5a6;" onclick="showInfo()">Hamarosan...</button>
+            <button class="submit-btn" style="margin-bottom:10px; background:#95a5a6;" onclick="showInfo()">Hamarosan...</button>
+            <button class="submit-btn" style="margin-bottom:10px; background:#95a5a6;" onclick="showInfo()">Hamarosan...</button>
+            <button class="submit-btn" style="margin-bottom:10px; background:#95a5a6;" onclick="showInfo()">Hamarosan...</button>
+            <button class="submit-btn" style="margin-bottom:10px; background:#95a5a6;" onclick="showInfo()">Hamarosan...</button>
+            <button class="submit-btn" style="margin-bottom:10px; background:#34495e;" onclick="showInfo()">Hamarosan...</button>
+            
+            <button onclick="document.getElementById('video-menu-overlay').style.display='none'" class="submit-btn" style="background:#7f8c8d; margin-top:10px;">Bezárás</button>
+        </div>
     </div>
-</div>
 
-<div id="info-overlay" class="overlay">
-    <div class="card" style="border-top: 8px solid #f39c12;">
-        <h2 style="color:#f39c12;">😉 HOPPÁ!</h2>
-        <p style="color:#333; font-weight:bold;">Látom már kíváncsi vagy...<br>Hamarosan érkezik!</p>
-        <button onclick="closeOverlay('info-overlay')" class="submit-btn" style="background:#f39c12;">Rendben</button>
+    <div id="info-overlay">
+        <div class="popup-card info-card">
+            <h2>😉 HOPPÁ!</h2>
+            <p>Látom már kíváncsi vagy...<br>Hamarosan érkezik!</p>
+            <button onclick="document.getElementById('info-overlay').style.display='none'" class="submit-btn" style="background:#f39c12; margin-top:10px;">Rendben</button>
+        </div>
     </div>
-</div>
 
-<div id="video-overlay" class="overlay">
-    <div id="video-wrapper"></div>
-    <button onclick="closeVideo()" class="submit-btn" style="width:180px; background:#ffd700; color:#000; margin-top:20px;">VISSZA</button>
-</div>
-
-<div id="success-overlay" class="overlay">
-    <div class="card" style="border-top: 8px solid #27ae60;">
-        <h2 style="color:#27ae60;">✓ VETTÜK!</h2>
-        <p style="color:#333; font-weight:bold;">A 12.B már intézkedik!</p>
-        <button onclick="closeOverlay('success-overlay')" class="submit-btn" style="background:#27ae60;">Vissza</button>
+    <div id="video-overlay">
+        <div id="video-wrapper"></div>
+        <button onclick="closeVideo()" class="submit-btn" style="width:200px; background:#ffd700; color:black; margin-top:20px;">VISSZA</button>
     </div>
-</div>
 
-<script>
-const scriptURL = 'https://script.google.com/macros/s/AKfycbzk5LEtFjBApTaQlK66QJlNPIk69Og36snw9B6iSekoKF0VNinIe0Yi2-cZLyH7lG3Ikw/exec';
+    <div id="success-overlay">
+        <div class="popup-card success-card">
+            <h2>✓ VETTÜK!</h2>
+            <p>Üzenet célba ért.<br>A 12.B már intézkedik!</p>
+            <button onclick="closeModal()" class="submit-btn" style="background:#27ae60; margin-top:10px;">Vissza</button>
+        </div>
+    </div>
 
-function openOverlay(id) { document.getElementById(id).style.display = 'flex'; }
-function closeOverlay(id) { document.getElementById(id).style.display = 'none'; }
+    <script>
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbzk5LEtFjBApTaQlK66QJlNPIk69Og36snw9B6iSekoKF0VNinIe0Yi2-cZLyH7lG3Ikw/exec';
 
-function playVideo(id) {
-    const wrapper = document.getElementById('video-wrapper');
-    // Itt a titok: allowfullscreen és a kiegészítők a mobil teljes képernyőhöz
-    wrapper.innerHTML = `<iframe src="https://drive.google.com/file/d/${id}/preview" 
-        allow="autoplay; fullscreen" 
-        allowfullscreen="true" 
-        webkitallowfullscreen="true" 
-        mozallowfullscreen="true"></iframe>`;
-    openOverlay('video-overlay');
-}
+        // --- ÚJ JS FUNKCIÓK A VIDEÓHOZ ---
+        function playVideo(id) {
+            const wrapper = document.getElementById('video-wrapper');
+            // Ez a preview linkes megoldás működött a 4K-hoz
+            wrapper.innerHTML = `<iframe src="https://drive.google.com/file/d/${id}/preview" allow="autoplay; fullscreen" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe>`;
+            document.getElementById('video-overlay').style.display = 'flex';
+        }
 
-function closeVideo() {
-    document.getElementById('video-wrapper').innerHTML = '';
-    closeOverlay('video-overlay');
-}
+        function closeVideo() {
+            document.getElementById('video-wrapper').innerHTML = ''; // Leállítja a videót
+            document.getElementById('video-overlay').style.display = 'none';
+        }
 
-function showInfo() { openOverlay('info-overlay'); }
+        function showInfo() {
+            document.getElementById('info-overlay').style.display = 'flex';
+        }
 
-function toggleForm() {
-    const f = document.getElementById("wish-form-container");
-    f.style.display = (f.style.display === "none") ? "block" : "none";
-}
+        // --- EREDETI JS KÓD ---
+        let bgClicks = 0;
+        function handleBgClick() {
+            bgClicks++;
+            if (bgClicks >= 10) {
+                const msg = document.getElementById('tap-message');
+                msg.style.display = 'block';
+                bgClicks = 0;
+                setTimeout(() => { msg.style.display = 'none'; }, 2000);
+            }
+        }
 
-// Easter Egg
-let clicks = 0;
-function handleBgClick() {
-    clicks++;
-    if(clicks >= 10) {
-        const m = document.getElementById('tap-message');
-        m.style.display = 'block'; clicks = 0;
-        setTimeout(() => m.style.display = 'none', 2000);
-    }
-}
+        document.getElementById('insta-link').onclick = function(e) {
+            var start = Date.now();
+            setTimeout(function() {
+                if (Date.now() - start < 1500) {
+                    window.location.href = "https://www.instagram.com/david_a_showman/";
+                }
+            }, 500);
+        };
 
-// Form kezelés
-document.getElementById("my-form").onsubmit = function(e) {
-    e.preventDefault();
-    const btn = document.getElementById("submit-button");
-    btn.disabled = true; btn.innerText = "Küldés...";
-    
-    fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: new FormData(this) })
-    .then(() => {
-        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-        openOverlay('success-overlay');
-        this.reset(); toggleForm();
-        btn.disabled = false; btn.innerText = "Intézd el!";
-    });
-};
-</script>
+        function toggleForm() {
+            var formDiv = document.getElementById("wish-form-container");
+            formDiv.style.display = (formDiv.style.display === "block") ? "none" : "block";
+        }
+
+        function closeModal() {
+            document.getElementById("success-overlay").style.display = "none";
+        }
+
+        const form = document.getElementById("my-form");
+        form.addEventListener("submit", e => {
+            e.preventDefault();
+            var btn = document.getElementById("submit-button");
+            btn.disabled = true;
+            btn.innerText = "Küldés...";
+
+            fetch(scriptURL, { 
+                method: 'POST', 
+                mode: 'no-cors', 
+                body: new FormData(form)
+            })
+            .then(() => {
+                confetti({
+                    particleCount: 150,
+                    spread: 70,
+                    origin: { y: 0.6 },
+                    colors: ['#ffd700', '#ffffff', '#27ae60']
+                });
+                document.getElementById("success-overlay").style.display = "flex";
+                form.reset();
+                toggleForm();
+                btn.disabled = false;
+                btn.innerText = "Intézd el!";
+            })
+            .catch(error => {
+                console.error('Hiba!', error);
+                alert("Hiba történt a küldés során!");
+                btn.disabled = false;
+                btn.innerText = "Intézd el!";
+            });
+        });
+    </script>
 </body>
 </html>
